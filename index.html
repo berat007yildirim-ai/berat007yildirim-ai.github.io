@@ -442,9 +442,20 @@
     hid("Vak",vak); hid("email",email); hid("Naam",name||"(anoniem)"); hid("Bericht",msg||"(geen bericht)"); hid("Aantal_bestanden",String(cFiles.length));
     try{ var dt=new DataTransfer(); cFiles.forEach(function(f){ dt.items.add(f); }); var finp=document.createElement("input"); finp.type="file"; finp.name="attachment"; finp.multiple=true; finp.files=dt.files; form.appendChild(finp); }catch(e){}
     document.body.appendChild(form);
-    var done=false; function finish(){ if(done) return; done=true; try{ form.parentNode.removeChild(form); ifr.parentNode.removeChild(ifr); }catch(e){} showThanks(); }
-    try{ form.submit(); }catch(e){ btn.disabled=false; btn.innerHTML=ic("upload")+"Insturen"; st.innerHTML='<div class="cerr">Versturen lukte niet. Mail je bestanden naar berat007yildirim@gmail.com.</div>'; return; }
-    setTimeout(finish, 1600);
+    var done=false, submitted=false;
+    function cleanup(){ try{ form.parentNode.removeChild(form); ifr.parentNode.removeChild(ifr); }catch(e){} }
+    function finish(){ if(done) return; done=true; cleanup(); showThanks(); }
+    // eerlijk vangnet: kregen we geen reactie van de server (bv. geen verbinding),
+    // toon dan GEEN nep-"Bedankt" maar een directe mailto zodat de bijdrage niet verloren gaat.
+    function failNet(){ if(done) return; done=true; cleanup();
+      var body="Materiaal voor: "+encodeURIComponent(vak)+"%0D%0ANaam: "+encodeURIComponent(name||"-")+"%0D%0AE-mail: "+encodeURIComponent(email)+"%0D%0A%0D%0ABericht:%0D%0A"+encodeURIComponent(msg||"-")+"%0D%0A%0D%0A(Vergeet je bestanden niet handmatig bij te voegen.)";
+      var mailto="mailto:berat007yildirim@gmail.com?subject="+encodeURIComponent("Berie's exam space - Materiaal voor: "+vak)+"&body="+body;
+      btn.disabled=false; btn.innerHTML=ic("upload")+"Insturen";
+      st.innerHTML='<div class="cerr">We kregen geen bevestiging dat het aankwam. Klik hier om het direct te mailen: <a href="'+mailto+'" style="text-decoration:underline;font-weight:600">mail je bijdrage</a> (hang je bestanden er dan zelf aan).</div>';
+    }
+    ifr.onload=function(){ if(submitted) finish(); };
+    try{ submitted=true; form.submit(); }catch(e){ failNet(); return; }
+    setTimeout(failNet, 15000);
   }
   function showThanks(){
     bump("berat-hub","bijdrage"); cFiles=[];
