@@ -250,18 +250,39 @@
     window.scrollTo(0,0);
   }
 
-  function showUseCount(){
-    var el=document.getElementById("useCount"); if(!el) return;
-    function fill(n){ el.innerHTML='<span class="uc-dot"></span>Al <b>'+n.toLocaleString("nl-NL")+'</b> keer gebruikt door studenten'; }
-    if(window._useTotal!=null){ fill(window._useTotal); return; }
-    Promise.all([
+  function fetchUseTotal(){
+    return Promise.all([
       fetch("https://abacus.jasoncameron.dev/get/berat-hub/bezoekers").then(function(r){return r.json();}).catch(function(){return {};}),
       fetch("https://abacus.jasoncameron.dev/get/berat-mbg/gebruikers").then(function(r){return r.json();}).catch(function(){return {};}),
       fetch("https://abacus.jasoncameron.dev/get/berat-stat/gebruikers").then(function(r){return r.json();}).catch(function(){return {};})
-    ]).then(function(a){
-      var n=(a[0].value||0)+(a[1].value||0)+(a[2].value||0);
-      if(n>0){ window._useTotal=n; var e=document.getElementById("useCount"); if(e) fill(n); }
-    }).catch(function(){});
+    ]).then(function(a){ return (a[0].value||0)+(a[1].value||0)+(a[2].value||0); });
+  }
+  function countUp(node, from, to){
+    var reduce=false; try{ reduce=window.matchMedia("(prefers-reduced-motion: reduce)").matches; }catch(e){}
+    if(reduce || from===to){ node.textContent=to.toLocaleString("nl-NL"); return; }
+    var dur=1100, t0=null;
+    function step(ts){ if(t0===null)t0=ts; var p=Math.min(1,(ts-t0)/dur); var e=1-Math.pow(1-p,3); node.textContent=Math.round(from+(to-from)*e).toLocaleString("nl-NL"); if(p<1) requestAnimationFrame(step); }
+    requestAnimationFrame(step);
+    setTimeout(function(){ node.textContent=to.toLocaleString("nl-NL"); }, dur+150);
+  }
+  function renderUseCount(to, from){
+    var box=document.getElementById("useCount"); if(!box) return;
+    var start=(from!=null?from:to);
+    box.innerHTML='<span class="uc-dot"></span>Wordt al gebruikt door <b id="ucNum">'+start.toLocaleString("nl-NL")+'</b> mensen';
+    var num=document.getElementById("ucNum"); if(num) countUp(num, start, to);
+  }
+  function showUseCount(){
+    var box=document.getElementById("useCount"); if(!box) return;
+    if(window._useTotal!=null){ renderUseCount(window._useTotal, null); }
+    else {
+      box.innerHTML='<span class="uc-dot"></span>Wordt al gebruikt door <b id="ucNum">…</b> mensen';
+      fetchUseTotal().then(function(n){ if(n>0){ window._useTotal=n; renderUseCount(n, 0); } });
+    }
+    if(!window._useTimer){
+      window._useTimer=setInterval(function(){
+        fetchUseTotal().then(function(n){ if(n>0 && n!==window._useTotal){ var old=window._useTotal||0; window._useTotal=n; renderUseCount(n, old); } });
+      }, 30000);
+    }
   }
   function renderTrack(dir){
     var html=
