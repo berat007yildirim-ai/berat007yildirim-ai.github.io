@@ -133,6 +133,54 @@
   @media (prefers-reduced-motion: reduce){
     .view-fwd,.view-bwd{animation:fade .2s ease both} *{transition-duration:.001ms!important}
   }
+
+  /* ---- Bijdragen / Deel je samenvattingen ---- */
+  button.vak.soon{cursor:pointer;opacity:.9}
+  button.vak.soon:hover{transform:translateY(-4px);border-color:var(--accent);opacity:1;box-shadow:var(--shadow-lg)}
+  button.vak.ghost{cursor:pointer}
+  button.vak.ghost:hover{border-color:var(--accent);color:var(--accent-ink);box-shadow:var(--shadow)}
+  .cwrap{max-width:560px;margin:0 auto}
+  .cintro{color:var(--muted);margin:0 0 18px;line-height:1.55}
+  .dropzone{border:2px dashed var(--line);border-radius:var(--r);padding:30px 18px;text-align:center;cursor:pointer;background:var(--card);transition:border-color .25s var(--ease),background .25s var(--ease),transform .15s var(--ease)}
+  .dropzone:hover,.dropzone.drag{border-color:var(--accent);background:var(--accent-soft)}
+  .dropzone.drag{transform:scale(1.01)}
+  .dropzone .dz-ic{width:38px;height:38px;color:var(--accent-ink);margin-bottom:8px}
+  .dropzone b{display:block;font-size:15px;margin-bottom:3px} .dropzone small{color:var(--muted);font-size:13px}
+  .filechips{display:flex;flex-direction:column;gap:8px;margin:14px 0 2px}
+  .filechip{display:flex;align-items:center;gap:10px;background:var(--card);border:1px solid var(--line);border-radius:10px;padding:9px 12px;font-size:13.5px}
+  @media (prefers-reduced-motion: no-preference){ .filechip{animation:upin .28s var(--ease) both} }
+  .filechip>.ic{width:18px;height:18px;color:var(--accent-ink);flex:none}
+  .filechip .fn{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .filechip .fsz{color:var(--muted);font-size:12px;flex:none}
+  .filechip .rm{border:none;background:none;color:var(--muted);cursor:pointer;display:flex;padding:3px;border-radius:6px;transition:color .2s,background .2s}
+  .filechip .rm:hover{color:#c23b54;background:var(--bg2)} .filechip .rm .ic{width:16px;height:16px}
+  .clabel{display:block;font-size:13px;font-weight:600;margin:16px 0 6px}
+  .cinput{width:100%;padding:12px 14px;border:1px solid var(--line);border-radius:11px;background:var(--card);color:var(--ink);font-family:inherit;font-size:15px;outline:none;transition:border-color .2s var(--ease),box-shadow .2s var(--ease);box-sizing:border-box}
+  .cinput:focus{border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-soft)}
+  select.cinput{cursor:pointer} textarea.cinput{resize:vertical;min-height:64px}
+  .csubmit{width:100%;margin-top:20px;background:var(--accent);color:#fff;border:none;border-radius:12px;min-height:50px;font-size:16px;font-weight:600;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;gap:9px;box-shadow:0 6px 16px rgba(15,110,106,.28);transition:transform .12s var(--ease),background .2s var(--ease)}
+  .csubmit:hover{background:var(--accent-ink)} .csubmit:active{transform:scale(.985)} .csubmit:disabled{opacity:.65;cursor:default;box-shadow:none}
+  .csubmit .ic{width:18px;height:18px}
+  .cerr{color:#c23b54;font-size:13.5px;margin-top:12px;line-height:1.5}
+  .spin{width:18px;height:18px;border:2.4px solid rgba(255,255,255,.4);border-top-color:#fff;border-radius:50%;display:inline-block}
+  @media (prefers-reduced-motion: no-preference){ .spin{animation:spin .7s linear infinite} }
+  @keyframes spin{to{transform:rotate(360deg)}}
+  .csuccess{text-align:center;padding:34px 10px}
+  .checkwrap{width:84px;height:84px;border-radius:50%;background:var(--good-soft);display:grid;place-items:center;margin:0 auto 18px}
+  .checkwrap svg{width:46px;height:46px;stroke:var(--good);stroke-width:3.4;fill:none;stroke-linecap:round;stroke-linejoin:round}
+  .checkwrap .cp{stroke-dasharray:44;stroke-dashoffset:0}
+  .csuccess h2{margin:0 0 10px} .csuccess p{color:var(--muted);line-height:1.6;margin:0 auto;max-width:34em}
+  @media (prefers-reduced-motion: no-preference){
+    .checkwrap{animation:pop .55s var(--ease) both}
+    .checkwrap .cp{stroke-dashoffset:44;animation:draw .5s var(--ease) .25s forwards}
+    .csuccess h2{animation:upin .5s var(--ease) .15s both} .csuccess p{animation:upin .5s var(--ease) .25s both}
+  }
+  @keyframes draw{to{stroke-dashoffset:0}}
+  .usecount{display:inline-flex;align-items:center;gap:8px;margin:18px auto 0;font-size:13.5px;color:var(--muted);background:var(--card);border:1px solid var(--line);border-radius:999px;padding:7px 15px;box-shadow:var(--shadow)}
+  .usecount b{color:var(--ink);font-weight:700}
+  .usecount .uc-dot{width:8px;height:8px;border-radius:50%;background:var(--good);flex:none}
+  @media (prefers-reduced-motion: no-preference){ .usecount .uc-dot{animation:ucpulse 2.2s var(--ease) infinite} }
+  @keyframes ucpulse{0%,100%{box-shadow:0 0 0 0 rgba(31,138,76,.45)}70%{box-shadow:0 0 0 7px rgba(31,138,76,0)}}
 </style>
 </head>
 <body>
@@ -162,9 +210,14 @@
     back:'<path d="m15 18-6-6 6-6"/>',
     sun:'<circle cx="12" cy="12" r="4"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="m4.93 4.93 1.41 1.41"/><path d="m17.66 17.66 1.41 1.41"/><path d="M2 12h2"/><path d="M20 12h2"/><path d="m6.34 17.66-1.41 1.41"/><path d="m19.07 4.93-1.41 1.41"/>',
     moon:'<path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/>',
-    arrowR:'<path d="M5 12h14"/><path d="m12 5 7 7-7 7"/>'
+    arrowR:'<path d="M5 12h14"/><path d="m12 5 7 7-7 7"/>',
+    upload:'<path d="M12 15V3"/><path d="m7 8 5-5 5 5"/><path d="M5 21h14"/>',
+    file:'<path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/>',
+    x:'<path d="M18 6 6 18"/><path d="m6 6 12 12"/>'
   };
-  function ic(n){ return '<svg class="ic" viewBox="0 0 24 24" aria-hidden="true">'+(P[n]||"")+'</svg>'; }
+  function ic(n,cls){ return '<svg class="ic'+(cls?' '+cls:'')+'" viewBox="0 0 24 24" aria-hidden="true">'+(P[n]||"")+'</svg>'; }
+  function esc(s){ return (s||"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;"); }
+  function fmtSize(b){ return b<1024?b+" B":(b<1048576?Math.round(b/1024)+" KB":(b/1048576).toFixed(1)+" MB"); }
   function ls(k){ try{ return localStorage.getItem(k); }catch(e){ return null; } }
   function lset(k,v){ try{ localStorage.setItem(k,v); }catch(e){} }
   function bump(ns,key){ try{ fetch("https://abacus.jasoncameron.dev/hit/"+ns+"/"+key).then(function(){},function(){}); }catch(e){} }
@@ -197,9 +250,22 @@
     window.scrollTo(0,0);
   }
 
+  function showUseCount(){
+    var el=document.getElementById("useCount"); if(!el) return;
+    function fill(n){ el.innerHTML='<span class="uc-dot"></span>Al <b>'+n.toLocaleString("nl-NL")+'</b> keer gebruikt door studenten'; }
+    if(window._useTotal!=null){ fill(window._useTotal); return; }
+    Promise.all([
+      fetch("https://abacus.jasoncameron.dev/get/berat-hub/bezoekers").then(function(r){return r.json();}).catch(function(){return {};}),
+      fetch("https://abacus.jasoncameron.dev/get/berat-mbg/gebruikers").then(function(r){return r.json();}).catch(function(){return {};}),
+      fetch("https://abacus.jasoncameron.dev/get/berat-stat/gebruikers").then(function(r){return r.json();}).catch(function(){return {};})
+    ]).then(function(a){
+      var n=(a[0].value||0)+(a[1].value||0)+(a[2].value||0);
+      if(n>0){ window._useTotal=n; var e=document.getElementById("useCount"); if(e) fill(n); }
+    }).catch(function(){});
+  }
   function renderTrack(dir){
     var html=
-      '<div class="bighero"><div class="biglogo">B</div><h1>Berie’s exam space</h1><p>Oefen slim voor je examen. Kies je manier van oefenen, daarna je vak — met directe feedback en uitleg bij elke vraag.</p></div>'+
+      '<div class="bighero"><div class="biglogo">B</div><h1>Berie’s exam space</h1><p>Oefen slim voor je examen. Kies je manier van oefenen, daarna je vak — met directe feedback en uitleg bij elke vraag.</p><div class="usecount" id="useCount" aria-live="polite"></div></div>'+
       '<div class="seclabel center">'+ic("sparkles")+'Hoe wil je oefenen?</div>'+
       '<div class="grid">'+
         '<button class="track" data-track="training"><span class="tile">'+ic("book")+'</span><b>Examen Training</b><small>Oefen op echt examenniveau. Directe feedback en uitleg bij elke vraag.</small><span class="go">Normaal niveau '+ic("arrowR")+'</span></button>'+
@@ -207,6 +273,7 @@
       '</div>';
     paint(html, dir);
     [].slice.call(view.querySelectorAll(".track")).forEach(function(el){ el.onclick=function(){ state.track=el.dataset.track; state.step="vak"; renderVak("fwd"); }; });
+    showUseCount();
   }
 
   function renderVak(dir){
@@ -219,9 +286,9 @@
       : '';
     var cards = VAKKEN.map(function(v){
       if(v.status==="live") return '<button class="vak" data-href="'+v.href+'"><span class="pill"><span class="dot"></span>Live</span><span class="tile '+v.tile+'">'+ic(v.icon)+'</span><b>'+v.title+'</b><small>'+v.desc+'</small><span class="go">Openen '+ic("arrowR")+'</span></button>';
-      return '<div class="vak soon"><span class="pill soon">In de maak</span><span class="tile '+v.tile+'">'+ic(v.icon)+'</span><b>'+v.title+'</b><small>'+v.desc+'</small><span class="go" style="color:var(--muted)">Binnenkort</span></div>';
+      return '<button class="vak soon" data-contribute="'+esc(v.title)+'"><span class="pill soon">In de maak</span><span class="tile '+v.tile+'">'+ic(v.icon)+'</span><b>'+v.title+'</b><small>'+v.desc+'</small><span class="go">Heb jij hier materiaal? Help mee '+ic("arrowR")+'</span></button>';
     }).join("");
-    cards += '<div class="vak ghost"><span class="plus">'+ic("plus")+'</span><b style="font-size:15px">Meer vakken volgen</b><small>Nieuwe vakken komen erbij zodra het materiaal klaar is.</small></div>';
+    cards += '<button class="vak ghost" data-contribute=""><span class="plus">'+ic("plus")+'</span><b style="font-size:15px">Deel je samenvattingen</b><small>Help de vakken vullen — sleep je materiaal erin.</small></button>';
     var html=
       '<button class="backlink" id="backBtn">'+ic("back")+'Terug</button>'+
       '<div class="modebanner'+(herk?" v":"")+'">'+ic(herk?"sprout":"book")+'<span>'+(herk?"Herkansing":"Examen Training")+'</span></div>'+
@@ -235,6 +302,78 @@
       var u=el.dataset.href+"?m="+state.track+"&calm="+(calm?"1":"0");
       window.location.href=u;
     }; });
+    [].slice.call(view.querySelectorAll("[data-contribute]")).forEach(function(el){ el.onclick=function(){
+      state.step="contribute"; renderContribute("fwd", el.getAttribute("data-contribute")||"");
+    }; });
+  }
+
+  var cFiles=[];
+  function renderContribute(dir, preVak){
+    var opts=VAKKEN.map(function(v){ return '<option'+(preVak===v.title?" selected":"")+'>'+esc(v.title)+'</option>'; }).join("")+'<option'+(preVak&&!VAKKEN.some(function(v){return v.title===preVak;})?" selected":"")+'>Ander vak</option>';
+    var html=
+      '<button class="backlink" id="backBtn">'+ic("back")+'Terug</button>'+
+      '<div class="cwrap">'+
+      '<div class="seclabel">'+ic("sparkles")+'Deel je samenvattingen</div>'+
+      '<p class="cintro">Heb jij goede samenvattingen, oefenvragen of documenten voor een vak? Deel ze hier, dan maken we er oefenstof van zodat <b>alle</b> studenten ermee kunnen oefenen. Je naam mag, maar hoeft niet.</p>'+
+      '<div class="dropzone" id="dz">'+ic("upload","dz-ic")+'<b>Sleep je bestanden hierheen</b><small>of klik om te kiezen &middot; PDF, Word, foto, enz. &middot; max 5 MB samen</small></div>'+
+      '<input type="file" id="fileInp" multiple style="display:none">'+
+      '<div class="filechips" id="chips"></div>'+
+      '<label class="clabel">Voor welk vak?</label><select class="cinput" id="cVak">'+opts+'</select>'+
+      '<label class="clabel">Je e-mail *</label><input class="cinput" type="email" id="cEmail" placeholder="zodat we je kunnen bereiken" autocomplete="email">'+
+      '<label class="clabel">Je naam (optioneel)</label><input class="cinput" type="text" id="cName" placeholder="mag ook anoniem">'+
+      '<label class="clabel">Bericht (optioneel)</label><textarea class="cinput" id="cMsg" placeholder="bv. welk hoofdstuk of wat erin staat"></textarea>'+
+      '<button class="csubmit" id="cSubmit">'+ic("upload")+'Insturen</button>'+
+      '<div id="cStatus"></div>'+
+      '</div>';
+    paint(html, dir);
+    document.getElementById("backBtn").onclick=function(){ state.step="vak"; renderVak("back"); };
+    var dz=document.getElementById("dz"), fi=document.getElementById("fileInp"), chips=document.getElementById("chips");
+    function renderChips(){
+      chips.innerHTML=cFiles.map(function(f,i){ return '<div class="filechip">'+ic("file")+'<span class="fn">'+esc(f.name)+'</span><span class="fsz">'+fmtSize(f.size)+'</span><button class="rm" data-i="'+i+'" aria-label="Verwijderen">'+ic("x")+'</button></div>'; }).join("");
+      [].slice.call(chips.querySelectorAll(".rm")).forEach(function(b){ b.onclick=function(){ cFiles.splice(+b.dataset.i,1); renderChips(); }; });
+    }
+    function addFiles(list){ for(var i=0;i<list.length;i++) cFiles.push(list[i]); renderChips(); }
+    dz.onclick=function(){ fi.click(); };
+    fi.onchange=function(){ addFiles(fi.files); fi.value=""; };
+    dz.ondragover=function(e){ e.preventDefault(); dz.classList.add("drag"); };
+    dz.ondragleave=function(){ dz.classList.remove("drag"); };
+    dz.ondrop=function(e){ e.preventDefault(); dz.classList.remove("drag"); if(e.dataTransfer&&e.dataTransfer.files) addFiles(e.dataTransfer.files); };
+    document.getElementById("cSubmit").onclick=submitContribution;
+    renderChips();
+  }
+  function submitContribution(){
+    var email=(document.getElementById("cEmail").value||"").trim();
+    var name=(document.getElementById("cName").value||"").trim();
+    var vak=document.getElementById("cVak").value;
+    var msg=(document.getElementById("cMsg").value||"").trim();
+    var st=document.getElementById("cStatus"); st.innerHTML="";
+    if(!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)){ st.innerHTML='<div class="cerr">Vul een geldig e-mailadres in.</div>'; return; }
+    if(cFiles.length===0 && !msg){ st.innerHTML='<div class="cerr">Voeg minstens een bestand toe, of schrijf een kort bericht.</div>'; return; }
+    var total=cFiles.reduce(function(s,f){ return s+f.size; },0);
+    if(total>5*1024*1024){ st.innerHTML='<div class="cerr">De bestanden zijn samen te groot (max 5 MB). Verwijder er een, of mail grote bestanden naar berat007yildirim@gmail.com.</div>'; return; }
+    var btn=document.getElementById("cSubmit"); btn.disabled=true; btn.innerHTML='<span class="spin"></span>Versturen...';
+    var ifr=document.createElement("iframe"); ifr.name="fsTarget"; ifr.style.display="none"; document.body.appendChild(ifr);
+    var form=document.createElement("form"); form.action="https://formsubmit.co/Berat007yildirim@gmail.com"; form.method="POST"; form.enctype="multipart/form-data"; form.target="fsTarget"; form.style.display="none";
+    function hid(n,v){ var i=document.createElement("input"); i.type="hidden"; i.name=n; i.value=v; form.appendChild(i); }
+    hid("_subject","Berie's exam space - Materiaal voor: "+vak);
+    hid("_captcha","false"); hid("_template","table");
+    hid("Vak",vak); hid("email",email); hid("Naam",name||"(anoniem)"); hid("Bericht",msg||"(geen bericht)"); hid("Aantal_bestanden",String(cFiles.length));
+    try{ var dt=new DataTransfer(); cFiles.forEach(function(f){ dt.items.add(f); }); var finp=document.createElement("input"); finp.type="file"; finp.name="attachment"; finp.multiple=true; finp.files=dt.files; form.appendChild(finp); }catch(e){}
+    document.body.appendChild(form);
+    var done=false; function finish(){ if(done) return; done=true; try{ form.parentNode.removeChild(form); ifr.parentNode.removeChild(ifr); }catch(e){} showThanks(); }
+    try{ form.submit(); }catch(e){ btn.disabled=false; btn.innerHTML=ic("upload")+"Insturen"; st.innerHTML='<div class="cerr">Versturen lukte niet. Mail je bestanden naar berat007yildirim@gmail.com.</div>'; return; }
+    setTimeout(finish, 1600);
+  }
+  function showThanks(){
+    bump("berat-hub","bijdrage"); cFiles=[];
+    var html='<div class="csuccess">'+
+      '<div class="checkwrap"><svg viewBox="0 0 52 52" aria-hidden="true"><path class="cp" d="M14 27l8 8 16-18"/></svg></div>'+
+      '<h2>Bedankt voor je bijdrage! 🙌</h2>'+
+      '<p>Top dat je je medestudenten helpt. We kijken je materiaal na en maken er oefenstof van. Heel veel succes met je examens! 💪</p>'+
+      '<div style="margin-top:24px"><button class="track" style="max-width:260px;margin:0 auto" id="cDone"><b>Terug naar de vakken</b><span class="go">'+ic("arrowR")+'</span></button></div>'+
+      '</div>';
+    paint(html,"fwd");
+    document.getElementById("cDone").onclick=function(){ state.step="vak"; renderVak("back"); };
   }
 
   renderTrack("fwd");
