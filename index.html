@@ -530,7 +530,14 @@
     document.getElementById("cDone").onclick=function(){ if(contribOrigin==="track"){ state.step="track"; renderTrack("back"); } else { state.step="vak"; renderVak("back"); } };
   }
 
-  renderTrack("fwd");
+  // deep-link vanuit de tools: ?deel=1 (optioneel &vak=...) opent direct het inlever-formulier
+  var _qs; try{ _qs=new URLSearchParams(location.search); }catch(e){ _qs=null; }
+  if(_qs && _qs.get("deel")){
+    contribOrigin="track"; state.step="contribute";
+    renderContribute("fwd", _qs.get("vak")||"");
+  } else {
+    renderTrack("fwd");
+  }
 
   // bezoeker tellen (1x per toestel)
   try{ if(!ls("hub_seen")){ lset("hub_seen","1"); bump("berat-hub","bezoekers"); } }catch(e){ bump("berat-hub","bezoekers"); }
