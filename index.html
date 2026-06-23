@@ -154,7 +154,8 @@
   .btn.ghost{background:transparent;color:var(--ink);border:1px solid var(--line);box-shadow:none} .btn.ghost:hover{border-color:var(--accent);background:var(--accent-soft)}
   .ccard .row{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
   .ccard select{appearance:none;-webkit-appearance:none;-moz-appearance:none;padding-right:42px;cursor:pointer;background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='20' height='20' viewBox='0 0 24 24' fill='none' stroke='%23888' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'><path d='m6 9 6 6 6-6'/></svg>");background-repeat:no-repeat;background-position:right 14px center;background-size:18px}
-  .ccard{max-width:560px}
+  .ccard{max-width:560px;width:100%}
+  #contribWrap{justify-content:center}
 </style>
 </head>
 <body>
@@ -345,7 +346,7 @@
         '<div class="row" style="gap:10px;margin-top:16px"><button class="btn" id="cSend" style="flex:1">'+ic("upload")+'Insturen</button><button class="btn ghost" id="cClose" type="button">Sluiten</button></div>'+
         '<div id="cStatus"></div>'+
       '</div>';
-    var wrap=document.getElementById("contribWrap"); wrap.innerHTML=html; wrap.style.display="block"; contribOpen=true;
+    var wrap=document.getElementById("contribWrap"); wrap.innerHTML=html; wrap.style.display="flex"; contribOpen=true;
     var tg=document.getElementById("shareToggle"); if(tg){ tg.setAttribute("aria-expanded","true"); tg.classList.add("open"); }
     var dz=document.getElementById("dz"), fi=document.getElementById("fi"), chips=document.getElementById("chips");
     function renderChips(){ chips.innerHTML=cFiles.map(function(f,i){ return '<span class="fchip">'+esc(f.name)+' <span class="muted">('+fmtSize(f.size)+')</span><button data-i="'+i+'" aria-label="verwijderen">×</button></span>'; }).join("");
