@@ -461,12 +461,23 @@
     else { renderYears(); }
   })();
 
-  // live cijfers (abacus): totaal in de pill + ECHT aantal per jaar
+  // live teller — telt automatisch mee, gaat ALLEEN omhoog (nooit omlaag, vloer 489)
+  function countUp(node, from, to){
+    var reduce=false; try{reduce=window.matchMedia("(prefers-reduced-motion: reduce)").matches;}catch(e){}
+    if(reduce||to<=from){ node.textContent=to.toLocaleString("nl-NL"); return; }
+    var dur=900,t0=null;
+    function step(ts){ if(t0===null)t0=ts; var p=Math.min(1,(ts-t0)/dur); var e=1-Math.pow(1-p,3); node.textContent=Math.round(from+(to-from)*e).toLocaleString("nl-NL"); if(p<1) requestAnimationFrame(step); }
+    requestAnimationFrame(step); setTimeout(function(){ node.textContent=to.toLocaleString("nl-NL"); }, dur+120);
+  }
   (function(){
     function get(ns,key){ return fetch("https://abacus.jasoncameron.dev/get/"+ns+"/"+key).then(function(r){return r.json();}).then(function(d){return (d&&d.value)||0;}).catch(function(){return 0;}); }
-    Promise.all([get("berat-hub","bezoekers"),get("berat-mbg","gebruikers"),get("berat-stat","gebruikers"),get("berat-socio","gebruikers")]).then(function(a){
+    Promise.all([get("berat-hub","bezoekers"),get("berat-mbg","gebruikers"),get("berat-stat","gebruikers"),get("berat-socio","gebruikers"),get("berat-socpsy","gebruikers")]).then(function(a){
       USE={"berat-hub":a[0],"berat-mbg":a[1],"berat-stat":a[2],"berat-socio":a[3]};
-      // LET OP: het totaalcijfer (#statN) is bewust VAST (489) en wordt NIET live bijgewerkt — Berat: mag nooit veranderen.
+      var total=a[0]+a[1]+a[2]+a[3]+a[4];
+      var floor=489, stored=0; try{ stored=parseInt(localStorage.getItem("bes_usecount")||"0",10)||0; }catch(e){}
+      var show=Math.max(total, stored, floor);          // nooit omlaag, nooit onder 489
+      try{ localStorage.setItem("bes_usecount", String(show)); }catch(e){}
+      var node=document.getElementById("statN"); if(node) countUp(node, floor, show);
       if(onYears) renderYears();
     }).catch(function(){});
   })();
