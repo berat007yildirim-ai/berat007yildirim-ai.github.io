@@ -512,7 +512,7 @@
         '<div class="row" style="gap:10px;margin-top:16px"><button class="btn" id="cSend" style="flex:1">'+ic("upload")+'Insturen</button><button class="btn ghost" id="cClose" type="button">Sluiten</button></div>'+
         '<div id="cStatus"></div>'+
       '</div>';
-    var wrap=document.getElementById("contribWrap"); wrap.innerHTML=html; wrap.style.display="flex"; contribOpen=true;
+    var wrap=document.getElementById("contribWrap"); wrap.innerHTML=html; contribOpen=true;
     var tg=document.getElementById("shareToggle"); if(tg){ tg.setAttribute("aria-expanded","true"); tg.classList.add("open"); }
     var dz=document.getElementById("dz"), fi=document.getElementById("fi"), chips=document.getElementById("chips");
     function renderChips(){ chips.innerHTML=cFiles.map(function(f,i){ return '<span class="fchip">'+esc(f.name)+' <span class="muted">('+fmtSize(f.size)+')</span><button data-i="'+i+'" aria-label="verwijderen">×</button></span>'; }).join("");
@@ -525,9 +525,44 @@
     dz.ondrop=function(e){ e.preventDefault(); dz.classList.remove("drag"); if(e.dataTransfer&&e.dataTransfer.files) addFiles(e.dataTransfer.files); };
     document.getElementById("cSend").onclick=submitContribute;
     document.getElementById("cClose").onclick=closeContrib;
-    if(scroll){ try{ document.getElementById("contribWrap").scrollIntoView({behavior:"smooth",block:"start"}); }catch(e){} }
+    // vloeiend uitvouwen (hoogte 0 -> vol) + zacht naar het formulier scrollen, zoals een anker ("Lees wie ik ben")
+    var reduceM=window.matchMedia&&window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    wrap.style.display="flex";
+    var scrollToForm=function(){ try{
+      var anchor=document.getElementById("shareToggle")||wrap;
+      var y=anchor.getBoundingClientRect().top+window.pageYOffset-78; if(y<0)y=0;
+      window.scrollTo({top:y,behavior:reduceM?"auto":"smooth"});
+    }catch(e){} };
+    if(reduceM){ wrap.style.height=""; wrap.style.overflow=""; scrollToForm(); }
+    else {
+      var target=wrap.scrollHeight;
+      wrap.style.overflow="hidden"; wrap.style.height="0px";
+      wrap.getBoundingClientRect(); // forceer reflow
+      wrap.style.transition="height .42s var(--ease)"; wrap.style.height=target+"px";
+      scrollToForm();
+      var openDone=false;
+      var onOpen=function(){ if(openDone)return; openDone=true;
+        wrap.style.transition=""; wrap.style.height=""; wrap.style.overflow="";
+        wrap.removeEventListener("transitionend",onOpen);
+      };
+      wrap.addEventListener("transitionend",onOpen); setTimeout(onOpen,520);
+    }
   }
-  function closeContrib(){ var w=document.getElementById("contribWrap"); if(w){ w.style.display="none"; w.innerHTML=""; } contribOpen=false; var tg=document.getElementById("shareToggle"); if(tg){ tg.setAttribute("aria-expanded","false"); tg.classList.remove("open"); } }
+  function closeContrib(){ var w=document.getElementById("contribWrap"); contribOpen=false;
+    var tg=document.getElementById("shareToggle"); if(tg){ tg.setAttribute("aria-expanded","false"); tg.classList.remove("open"); }
+    if(!w || w.style.display==="none"){ if(w){ w.innerHTML=""; } return; }
+    var reduceM=window.matchMedia&&window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    if(reduceM){ w.style.display="none"; w.innerHTML=""; w.style.height=""; w.style.overflow=""; return; }
+    var h=w.scrollHeight; w.style.overflow="hidden"; w.style.height=h+"px";
+    w.getBoundingClientRect(); // forceer reflow
+    w.style.transition="height .32s var(--ease)"; w.style.height="0px";
+    var clDone=false;
+    var onClose=function(){ if(clDone)return; clDone=true;
+      w.style.display="none"; w.innerHTML=""; w.style.height=""; w.style.overflow=""; w.style.transition="";
+      w.removeEventListener("transitionend",onClose);
+    };
+    w.addEventListener("transitionend",onClose); setTimeout(onClose,420);
+  }
   function toggleContrib(){ if(contribOpen) closeContrib(); else renderContribute("", false); }
   function submitContribute(){
     var email=(document.getElementById("cEmail").value||"").trim();
