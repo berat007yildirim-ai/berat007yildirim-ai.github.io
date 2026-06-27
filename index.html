@@ -442,9 +442,9 @@
         <div class="metric"><div class="ml">Gewogen gemiddelde</div><div class="mv"><span id="ex2Avg">--</span><small> /20</small></div></div>
         <div class="metric"><div class="ml">In percentage</div><div class="mv"><span id="ex2Pct">--</span><small> %</small></div><div class="mh">drempel deliberatie: 55%</div></div>
       </div>
-      <div class="verdict" id="ex2Verdict">
-        <span class="vbox" id="ex2VIc"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg></span>
-        <div><div class="vt" id="ex2VTitle">--</div><div class="vs" id="ex2VSub"></div></div>
+      <div class="verdict" id="ex2Verdict" style="border-color:var(--line);background:var(--bg2)">
+        <span class="vbox" id="ex2VIc" style="background:var(--line)"></span>
+        <div><div class="vt" id="ex2VTitle" style="color:var(--muted)">Vul je vakken in om te beginnen</div><div class="vs" id="ex2VSub">Je ziet hier meteen of je aan de deliberatievoorwaarden voldoet.</div></div>
       </div>
       <div class="rules">
         <div class="rule" id="ex2r1"></div>
@@ -472,12 +472,12 @@
     /* ---- Calculator 1: cijfer voor een vak ---- */
     (function(){
       var box=el('ex1Rows');
-      var start=[['Examen',14,80],['Taak',12,15],['Wpo aanwezigheid',16,5]];
+      var start=[['','',''],['','',''],['','','']];
       function row(naam,punt,weeg){
         var r=document.createElement('div'); r.className='crow';
         r.innerHTML='<input class="c-naam" type="text" value="'+naam+'" placeholder="Onderdeel" aria-label="onderdeel">'+
-          '<span class="uwrap"><input class="c-punt num" type="number" min="0" max="20" step="0.1" value="'+punt+'" aria-label="cijfer op 20"><span>/20</span></span>'+
-          '<span class="uwrap"><input class="c-weeg num" type="number" min="0" max="100" step="1" value="'+weeg+'" aria-label="gewicht procent"><span>%</span></span>'+
+          '<span class="uwrap"><input class="c-punt num" type="number" min="0" max="20" step="0.1" value="'+punt+'" placeholder="0" aria-label="cijfer op 20"><span>/20</span></span>'+
+          '<span class="uwrap"><input class="c-weeg num" type="number" min="0" max="100" step="1" value="'+weeg+'" placeholder="0" aria-label="gewicht procent"><span>%</span></span>'+
           '<button class="delbtn" aria-label="verwijder">&times;</button>';
         return r;
       }
@@ -485,7 +485,7 @@
         var rows=box.querySelectorAll('.crow'), sw=0, spw=0;
         rows.forEach(function(x){ var p=parseFloat(x.querySelector('.c-punt').value); var w=parseFloat(x.querySelector('.c-weeg').value); if(!isNaN(w)){ sw+=w; if(!isNaN(p)) spw+=p*w; } });
         el('ex1Wsum').textContent=Math.round(sw);
-        el('ex1Warn').style.display=(Math.round(sw)!==100)?'inline':'none';
+        el('ex1Warn').style.display=(sw>0&&Math.round(sw)!==100)?'inline':'none';
         var mk=el('ex1Mark'),rd=el('ex1Round'),pc=el('ex1Pct'),st=el('ex1Status');
         if(sw>0){ var w8=spw/sw, off=Math.round(w8), p=w8/20*100; mk.textContent=fmt(w8,1); rd.textContent=off; pc.textContent=Math.round(p);
           if(off>=10){ st.style.color='var(--good)'; st.textContent='Geslaagd'; } else { st.style.color='#e0654a'; st.textContent='Niet geslaagd'; }
@@ -494,19 +494,19 @@
       start.forEach(function(d){ box.appendChild(row(d[0],d[1],d[2])); });
       box.addEventListener('input',calc);
       box.addEventListener('click',function(e){ var d=e.target.closest('.delbtn'); if(d && box.querySelectorAll('.crow').length>1){ d.closest('.crow').remove(); calc(); } });
-      el('ex1Add').addEventListener('click',function(){ box.appendChild(row('Nieuw onderdeel',10,0)); calc(); });
+      el('ex1Add').addEventListener('click',function(){ box.appendChild(row('','','')); calc(); });
       calc();
     })();
 
     /* ---- Calculator 2: gemiddelde en deliberatie ---- */
     (function(){
       var box=el('ex2Rows');
-      var start=[['Statistiek',9,6],['Biologische psychologie',8,6],['Ontwikkelingspsychologie',13,6],['Sociale psychologie',14,3],['Onderzoeksmethoden',14,4]];
+      var start=[['','',''],['','',''],['','','']];
       function row(naam,cij,sp){
         var r=document.createElement('div'); r.className='crow';
         r.innerHTML='<input class="v-naam" type="text" value="'+naam+'" placeholder="Vak" aria-label="vak">'+
-          '<span class="uwrap"><input class="v-cij num" type="number" min="0" max="20" step="1" value="'+cij+'" aria-label="cijfer op 20"><span>/20</span></span>'+
-          '<span class="uwrap"><input class="v-sp num" type="number" min="0" max="30" step="1" value="'+sp+'" aria-label="studiepunten"><span>stp</span></span>'+
+          '<span class="uwrap"><input class="v-cij num" type="number" min="0" max="20" step="1" value="'+cij+'" placeholder="0" aria-label="cijfer op 20"><span>/20</span></span>'+
+          '<span class="uwrap"><input class="v-sp num" type="number" min="0" max="30" step="1" value="'+sp+'" placeholder="0" aria-label="studiepunten"><span>stp</span></span>'+
           '<button class="delbtn" aria-label="verwijder">&times;</button>';
         return r;
       }
@@ -520,7 +520,14 @@
         var rows=box.querySelectorAll('.crow'), ssp=0, scs=0, items=[];
         rows.forEach(function(x){ var c=parseFloat(x.querySelector('.v-cij').value); var s=parseFloat(x.querySelector('.v-sp').value); if(!isNaN(c)&&!isNaN(s)&&s>0){ ssp+=s; scs+=c*s; items.push({c:c,s:s}); } });
         var av=el('ex2Avg'), pc=el('ex2Pct');
-        if(ssp<=0){ av.textContent='--'; pc.textContent='--'; return; }
+        if(ssp<=0){ av.textContent='--'; pc.textContent='--';
+          var nb=el('ex2Verdict'),ni=el('ex2VIc'),nt=el('ex2VTitle'),ns=el('ex2VSub');
+          nb.style.borderColor='var(--line)'; nb.style.background='var(--bg2)'; ni.style.background='var(--line)'; ni.innerHTML='';
+          nt.style.color='var(--muted)'; nt.textContent='Vul je vakken in om te beginnen'; ns.textContent='Je ziet hier meteen of je aan de deliberatievoorwaarden voldoet.';
+          var L={ex2r1:'Gewogen gemiddelde minstens 55%',ex2r2:'Geen vak onder 8/20',ex2r3:'Hoogstens 2 vakken onder 10',ex2r4:'Hoogstens 3 punten tekort',ex2r5:'Gewogen-punten-tekort hoogstens 18'};
+          Object.keys(L).forEach(function(id){ el(id).innerHTML='<span class="ric" style="background:var(--line)"></span><span class="rlbl" style="color:var(--muted)">'+L[id]+'</span>'; });
+          return;
+        }
         var avg=scs/ssp, pct=avg/20*100; av.textContent=fmt(avg,1); pc.textContent=Math.round(pct);
         var tek=items.filter(function(i){return i.c<10;});
         var on8=items.filter(function(i){return i.c<8;});
@@ -543,7 +550,7 @@
       start.forEach(function(d){ box.appendChild(row(d[0],d[1],d[2])); });
       box.addEventListener('input',calc);
       box.addEventListener('click',function(e){ var d=e.target.closest('.delbtn'); if(d && box.querySelectorAll('.crow').length>1){ d.closest('.crow').remove(); calc(); } });
-      el('ex2Add').addEventListener('click',function(){ box.appendChild(row('Nieuw vak',12,3)); calc(); });
+      el('ex2Add').addEventListener('click',function(){ box.appendChild(row('','','')); calc(); });
       calc();
     })();
   })();
