@@ -56,6 +56,7 @@
     padding:7px 11px;font-size:13.5px;display:inline-flex;gap:7px;align-items:center;text-decoration:none;
     transition:border-color .2s var(--ease),transform .12s var(--ease)}
   .iconbtn:hover{border-color:var(--accent)} .iconbtn:active{transform:scale(.96)}
+  .iconbtn:focus{outline:none} .iconbtn:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
 
   /* hero */
   .hero{text-align:center;margin:34px 0 6px}
@@ -156,9 +157,15 @@
   @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
   section[id]{scroll-margin-top:78px}
   .topnav{display:flex;gap:2px}
-  .navlink{color:var(--muted);font-weight:600;font-size:14px;text-decoration:none;padding:7px 11px;border-radius:9px;white-space:nowrap;
-    transition:color .2s var(--ease),background .2s var(--ease)}
-  .navlink:hover{color:var(--ink);background:var(--accent-soft)}
+  .navlink{position:relative;color:var(--muted);font-weight:600;font-size:14px;text-decoration:none;padding:7px 11px;border-radius:9px;white-space:nowrap;
+    transition:color .2s var(--ease),transform .12s var(--ease)}
+  .navlink::after{content:"";position:absolute;left:11px;right:11px;bottom:3px;height:2px;border-radius:2px;background:var(--accent-ink);
+    transform:scaleX(0);transform-origin:center;transition:transform .26s var(--ease);pointer-events:none}
+  .navlink:hover{color:var(--ink)}
+  .navlink:hover::after{transform:scaleX(1)}
+  .navlink:active{transform:scale(.95)}
+  .navlink:focus{outline:none}
+  .navlink:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
   @media(max-width:560px){.brand>div{display:none}.navlink{padding:6px 9px;font-size:13px}}
 
   /* trust-strip onder de hero (council-advies) */
