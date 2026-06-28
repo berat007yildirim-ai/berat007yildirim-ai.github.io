@@ -966,7 +966,7 @@
     vt.ready.then(function(){
       document.documentElement.animate(
         { clipPath:["circle(0px at "+x+"px "+y+"px)","circle("+end+"px at "+x+"px "+y+"px)"] },
-        { duration:620, easing:"cubic-bezier(.22,1,.36,1)", pseudoElement:"::view-transition-new(root)" }
+        { duration:1100, easing:"cubic-bezier(.22,1,.36,1)", pseudoElement:"::view-transition-new(root)" }
       );
     });
   };
